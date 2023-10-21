@@ -5,6 +5,12 @@
                 <h1><?= isset($cliente) ? "Edição do $cliente->nome" : "Novo cliente" ?></h1>
                 <hr>
 
+                <?php if( isset($erro) && $erro != "" ) { ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?= $erro ?>
+                    </div>
+                <?php } ?>
+
                 <form action="<?= isset($cliente) ? "/clientes/$cliente->id" : "/clientes" ?>" method="post" >
                     <div class="form-group">
                         <label for="nome">Nome:</label>

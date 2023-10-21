@@ -8,6 +8,9 @@ use Danilo\EcommerceDesafio\Views\RenderView;
 use Danilo\EcommerceDesafio\Servicos\ClienteServico;
 use Danilo\EcommerceDesafio\Repositorios\ClienteRepositorioMysql;
 use Danilo\EcommerceDesafio\Repositorios\ClienteRepositorioIlluminate;
+use Danilo\EcommerceDesafio\Servicos\ErrosDeValidacao\FormatoValidacao;
+use Danilo\EcommerceDesafio\Servicos\ErrosDeValidacao\VazioValidacao;
+use Illuminate\Database\UniqueConstraintViolationException;
 
 class ClientesController{
     private static $service;
@@ -40,7 +43,22 @@ class ClientesController{
             $data['endereco'] ?? ""
         );
         
-        self::service()->salvar($cliente);
+        try{
+            self::service()->salvar($cliente);
+        }
+        catch (VazioValidacao $err) {
+            return RenderView::render($response, ["erro" => $err->getMessage()], "Form");
+        } 
+        catch (FormatoValidacao $err) {
+            return RenderView::render($response, ["erro" => $err->getMessage()], "Form");
+        } 
+        catch (UniqueConstraintViolationException $err) {
+            return RenderView::render($response, ["erro" => "Registro duplicado"], "Form");
+        }
+        catch (Exception $e) {
+            return RenderView::render($response, ["erro" => "Erro genérico: {$e->getMessage()}"], "Form");
+        }
+
         return $response->withStatus(302)->withHeader('Location', '/clientes');
     }
 
@@ -51,7 +69,7 @@ class ClientesController{
         if(!isset($cliente))
             return $response->withStatus(302)->withHeader('Location', '/clientes');
         
-        return RenderView::render($response, ['cliente' => $cliente], "Form");
+        return RenderView::render($response, ["cliente" => $cliente], "Form");
     }
 
     public static function atualizar(Request $request, Response $response) {
