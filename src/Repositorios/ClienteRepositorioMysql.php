@@ -20,7 +20,7 @@ class ClienteRepositorioMysql implements IRepositorio {
             "endereco" => $obj->endereco,
         ];
 
-        if(isset($obj->id)){
+        if(isset($obj->id) && $obj->id > 0){
             $params["id"] = $obj->id;
             $sql = "update clientes set nome = :nome, telefone = :telefone, email = :email, endereco = :endereco where id = :id ";
         }

@@ -5,6 +5,7 @@ use Slim\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 use Danilo\EcommerceDesafio\Controllers\ClientesController;
+use Danilo\EcommerceDesafio\Controllers\PedidosController;
 use Danilo\EcommerceDesafio\Controllers\HomeController;
 use Danilo\EcommerceDesafio\Views\RenderView;
 
@@ -13,17 +14,22 @@ class Routes{
         $app->get('/', [HomeController::class, 'index']);
 
         $app->get('/clientes', [ClientesController::class, 'index']);
+        $app->get('/clientes.json', [ClientesController::class, 'indexJson']);
         $app->get('/clientes/novo', [ClientesController::class, 'novo']);
         $app->get('/clientes/{id}/excluir', [ClientesController::class, 'excluir']);
         $app->post('/clientes', [ClientesController::class, 'criar']);
         $app->get('/clientes/{id}/editar', [ClientesController::class, 'editar']);
         $app->post('/clientes/{id}', [ClientesController::class, 'atualizar']);
 
+        $app->get('/pedidos', [PedidosController::class, 'index']);
+        $app->get('/pedidos/novo', [PedidosController::class, 'novo']);
+        $app->get('/pedidos/{id}/excluir', [PedidosController::class, 'excluir']);
+        $app->post('/pedidos', [PedidosController::class, 'criar']);
+        $app->get('/pedidos/{id}/editar', [PedidosController::class, 'editar']);
+        $app->post('/pedidos/{id}', [PedidosController::class, 'atualizar']);
 
 
 
-
-        
         // meus arquivos de assets oficiais
         $app->get('/assets/{path:.*}', function ($request, $response, $args) {
             $file = __DIR__ . '/../Assets/' . $args['path'];

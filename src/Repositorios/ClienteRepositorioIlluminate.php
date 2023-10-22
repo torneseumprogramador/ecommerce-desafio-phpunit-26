@@ -13,7 +13,7 @@ class ClienteRepositorioIlluminate implements IRepositorio {
     private $repo;
 
     public function salvar($obj){
-        if (isset($obj->id)) {
+        if (isset($obj->id) && $obj->id > 0) {
             return $this->repo->table('clientes')
                 ->where('id', $obj->id)
                 ->update([
