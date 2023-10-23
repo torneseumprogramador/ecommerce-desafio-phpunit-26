@@ -6,7 +6,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Danilo\EcommerceDesafio\Models\Cliente;
 use Danilo\EcommerceDesafio\Views\RenderView;
 use Danilo\EcommerceDesafio\Servicos\ClienteServico;
-// use Danilo\EcommerceDesafio\Repositorios\ClienteRepositorioMysql;
 use Danilo\EcommerceDesafio\Repositorios\ClienteRepositorioIlluminate;
 use Danilo\EcommerceDesafio\Servicos\ErrosDeValidacao\FormatoValidacao;
 use Danilo\EcommerceDesafio\Servicos\ErrosDeValidacao\VazioValidacao;
@@ -17,29 +16,40 @@ class ClientesController{
 
     private static function service() {
         if(!isset($service)) $service = new ClienteServico(new ClienteRepositorioIlluminate());
-        // if(!isset($service)) $service = new ClienteServico(new ClienteRepositorioMysql());
         return $service;
     }
 
     public static function index(Request $request, Response $response) {
-        $clientes = self::service()->buscar();
-        return RenderView::render($response, ['clientes' => $clientes]);
-    }
+        $querystringParams = $request->getQueryParams();
+        $pagina = $querystringParams["pagina"] ?? 1;
+        $totalPagina = $querystringParams["totalPagina"] ?? 5;
+        if($totalPagina > 20) $totalPagina = 20;
+        
+        $params = [];
 
-    public static function indexJson(Request $request, Response $response) {
-        $querystring = $request->getQueryParams();
-        $nome = $querystring['nome'] ?? "";
-        $clientes = self::service()->buscar(['nome' => $nome]);
+        if(isset($querystringParams["nome"]))
+            $params["nome"] = $querystringParams["nome"];
+        
+        if(isset($querystringParams["id"]))
+            $params["id"] = $querystringParams["id"];
+
+        $clientes = self::service()->buscar($params, $pagina, $totalPagina);
         $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($clientes));
-        return $response;
+        return $response->withStatus(200);
     }
 
-    public static function novo(Request $request, Response $response) {
-        return RenderView::render($response, [], "Form");
+    public static function mostrar(Request $request, Response $response) {
+        $id = $request->getAttribute('id');
+        $cliente = self::service()->buscarPorId($id);
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode($cliente));
+        return $response->withStatus(200);
     }
 
     public static function criar(Request $request, Response $response) {
+        $response = $response->withHeader('Content-Type', 'application/json');
+        
         $cliente = new Cliente();
         
         $data = $request->getParsedBody();
@@ -56,37 +66,36 @@ class ClientesController{
             self::service()->salvar($cliente);
         }
         catch (VazioValidacao $err) {
-            return RenderView::render($response, ["erro" => $err->getMessage()], "Form");
+            $response->getBody()->write(json_encode(["mensagem" => $err->getMessage()]));
+            return $response->withStatus(400);
         } 
         catch (FormatoValidacao $err) {
-            return RenderView::render($response, ["erro" => $err->getMessage()], "Form");
+            $response->getBody()->write(json_encode(["mensagem" => $err->getMessage()]));
+            return $response->withStatus(400);
         } 
         catch (UniqueConstraintViolationException $err) {
-            return RenderView::render($response, ["erro" => "Registro duplicado"], "Form");
+            $response->getBody()->write(json_encode(["mensagem" => "Registro duplicado"]));
+            return $response->withStatus(400);
         }
         catch (Exception $e) {
-            return RenderView::render($response, ["erro" => "Erro genérico: {$e->getMessage()}"], "Form");
+            $response->getBody()->write(json_encode(["mensagem" => "Erro genérico: {$e->getMessage()}"]));
+            return $response->withStatus(400);
         }
 
-        return $response->withStatus(302)->withHeader('Location', '/clientes');
-    }
-
-    public static function editar(Request $request, Response $response) {
-        $id = $request->getAttribute('id');
-        $cliente = self::service()->buscarPorId($id);
-
-        if(!isset($cliente))
-            return $response->withStatus(302)->withHeader('Location', '/clientes');
-        
-        return RenderView::render($response, ["cliente" => $cliente], "Form");
+        $response->getBody()->write(json_encode($cliente));
+        return $response->withStatus(201);
     }
 
     public static function atualizar(Request $request, Response $response) {
+        $response = $response->withHeader('Content-Type', 'application/json');
+
         $id = $request->getAttribute('id');
         $cliente = self::service()->buscarPorId($id);
 
-        if(!isset($cliente))
-            return $response->withStatus(302)->withHeader('Location', '/clientes');
+        if($cliente->id == 0){
+            $response->getBody()->write(json_encode(["mensagem" => "id: $id não foi encontrado"]));
+            return $response->withStatus(404);
+        }
 
         $data = $request->getParsedBody();
 
@@ -99,25 +108,37 @@ class ClientesController{
             self::service()->salvar($cliente);
         }
         catch (VazioValidacao $err) {
-            return RenderView::render($response, ["erro" => $err->getMessage()], "Form");
+            $response->getBody()->write(json_encode(["mensagem" => $err->getMessage()]));
+            return $response->withStatus(400);
         } 
         catch (FormatoValidacao $err) {
-            return RenderView::render($response, ["erro" => $err->getMessage()], "Form");
+            $response->getBody()->write(json_encode(["mensagem" => $err->getMessage()]));
+            return $response->withStatus(400);
         } 
         catch (UniqueConstraintViolationException $err) {
-            return RenderView::render($response, ["erro" => "Registro duplicado"], "Form");
+            $response->getBody()->write(json_encode(["mensagem" => "Registro duplicado"]));
+            return $response->withStatus(400);
         }
         catch (Exception $e) {
-            return RenderView::render($response, ["erro" => "Erro genérico: {$e->getMessage()}"], "Form");
+            $response->getBody()->write(json_encode(["mensagem" => "Erro genérico: {$e->getMessage()}"]));
+            return $response->withStatus(400);
         }
-        
-        return $response->withStatus(302)->withHeader('Location', '/clientes');
+
+        $response->getBody()->write(json_encode($cliente));
+        return $response->withStatus(200);
     }
 
     public static function excluir(Request $request, Response $response) {
         $id = $request->getAttribute('id');
+
+        $cliente = self::service()->buscarPorId($id);
+        if($cliente->id == 0){
+            $response->getBody()->write(json_encode(["mensagem" => "id: $id não foi encontrado"]));
+            return $response->withStatus(404);
+        }
+
         self::service()->excluirPorId($id);
         
-        return $response->withStatus(302)->withHeader('Location', '/clientes');
+        return $response->withStatus(204);
     }
 }

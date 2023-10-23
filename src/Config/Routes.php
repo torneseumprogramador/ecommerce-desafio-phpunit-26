@@ -14,13 +14,12 @@ class Routes{
         $app->get('/', [HomeController::class, 'index']);
 
         $app->get('/clientes', [ClientesController::class, 'index']);
-        $app->get('/clientes.json', [ClientesController::class, 'indexJson']);
-        $app->get('/clientes/novo', [ClientesController::class, 'novo']);
-        $app->get('/clientes/{id}/excluir', [ClientesController::class, 'excluir']);
         $app->post('/clientes', [ClientesController::class, 'criar']);
-        $app->get('/clientes/{id}/editar', [ClientesController::class, 'editar']);
-        $app->post('/clientes/{id}', [ClientesController::class, 'atualizar']);
+        $app->delete('/clientes/{id}', [ClientesController::class, 'excluir']);
+        $app->get('/clientes/{id}', [ClientesController::class, 'mostrar']);
+        $app->put('/clientes/{id}', [ClientesController::class, 'atualizar']);
 
+        // TODO queridos alunos, fazer a questão abaixo sobre os pedidos
         $app->get('/pedidos', [PedidosController::class, 'index']);
         $app->get('/pedidos/novo', [PedidosController::class, 'novo']);
         $app->get('/pedidos/{id}/excluir', [PedidosController::class, 'excluir']);
@@ -30,33 +29,15 @@ class Routes{
 
 
 
-        // meus arquivos de assets oficiais
-        $app->get('/assets/{path:.*}', function ($request, $response, $args) {
-            $file = __DIR__ . '/../Assets/' . $args['path'];
-        
-            if (!file_exists($file)) {
-                return $response->withStatus(404);
-            }
-
-            $extensionMimeTypes = [
-                'css' => 'text/css',
-                'js'  => 'application/javascript',
-            ];
-
-            $extension = pathinfo($file, PATHINFO_EXTENSION);
-            $mime = $extensionMimeTypes[$extension] ?? mime_content_type($file);
-
-            $stream = new \Slim\Psr7\Stream(fopen($file, 'r'));
-
-            return $response->withHeader('Content-Type', $mime)->withBody($stream);
-        });
-
         $errorMiddleware = $app->addErrorMiddleware(true, true, true);
-
         $errorMiddleware->setErrorHandler(
             HttpNotFoundException::class,
             function (ServerRequestInterface $request, \Throwable $exception, bool $displayErrorDetails) {
-                return RenderView::render404(new Response());
+                $response = new Response();
+                $response = $response->withHeader('Content-Type', 'application/json');
+                $response->getBody()->write(json_encode(["mensagem" => "O endpoint que você procura não existe"]));
+                $response->withStatus(404);
+                return $response;
             }
         );
     }

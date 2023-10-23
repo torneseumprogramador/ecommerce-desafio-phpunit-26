@@ -14,7 +14,7 @@ class ClienteRepositorioIlluminate implements IRepositorio {
 
     public function salvar($obj){
         if (isset($obj->id) && $obj->id > 0) {
-            return $this->repo->table('clientes')
+            $this->repo->table('clientes')
                 ->where('id', $obj->id)
                 ->update([
                     'nome'     => $obj->nome,
@@ -22,15 +22,21 @@ class ClienteRepositorioIlluminate implements IRepositorio {
                     'email'    => $obj->email,
                     'endereco' => $obj->endereco
                 ]);
+
+            return $obj;
         }
         
         // Caso contrário, inserimos um novo registro e retornamos o ID inserido
-        return $this->repo->table('clientes')->insertGetId([
+        $id = $this->repo->table('clientes')->insertGetId([
             'nome'     => $obj->nome,
             'telefone' => $obj->telefone,
             'email'    => $obj->email,
             'endereco' => $obj->endereco
         ]);
+
+        $obj->id = $id;
+
+        return $obj;
     }
 
     public function buscar($params=[], $pagina=1, $totalPagina=5) : array {
@@ -71,6 +77,7 @@ class ClienteRepositorioIlluminate implements IRepositorio {
 
     public function buscarPorId($id) : Cliente{
         $dado = $this->repo->table('clientes')->where('id', $id)->first();
+        if(!$dado) return new Cliente();
 
         return new Cliente(
             $dado->id,

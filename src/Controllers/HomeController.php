@@ -8,9 +8,9 @@ use Danilo\EcommerceDesafio\Views\RenderView;
 
 class HomeController{
     public static function index(Request $request, Response $response) {
-        $cliente = new Cliente();
-        $cliente->nome = "Alexandro Abade";
-    
-        return RenderView::render($response, ['cliente' => $cliente]);
+        $response = $response->withHeader('Content-Type', 'application/json');
+        $response->getBody()->write(json_encode(["mensagem" => "Bem vindo a API feita no Desafio de PHP"]));
+        $response->withStatus(200);
+        return $response;
     }
 }
