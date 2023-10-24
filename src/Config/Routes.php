@@ -7,28 +7,30 @@ use Slim\Exception\HttpNotFoundException;
 use Danilo\EcommerceDesafio\Controllers\ClientesController;
 use Danilo\EcommerceDesafio\Controllers\PedidosController;
 use Danilo\EcommerceDesafio\Controllers\HomeController;
+use Danilo\EcommerceDesafio\Controllers\LoginController;
 use Danilo\EcommerceDesafio\Views\RenderView;
 
 class Routes{
-    public static function render($app){
-        $app->get('/', [HomeController::class, 'index']);
+    public static function render($app, $checkUserMiddleware){
+        $app->get('/', [HomeController::class, 'index'])->add($checkUserMiddleware);
 
-        $app->get('/clientes', [ClientesController::class, 'index']);
-        $app->post('/clientes', [ClientesController::class, 'criar']);
-        $app->delete('/clientes/{id}', [ClientesController::class, 'excluir']);
-        $app->get('/clientes/{id}', [ClientesController::class, 'mostrar']);
-        $app->put('/clientes/{id}', [ClientesController::class, 'atualizar']);
+        $app->post('/login', [LoginController::class, 'acao'])->add($checkUserMiddleware);
+
+        $app->get('/clientes', [ClientesController::class, 'index'])->add($checkUserMiddleware);
+        $app->post('/clientes', [ClientesController::class, 'criar'])->add($checkUserMiddleware);
+        $app->delete('/clientes/{id}', [ClientesController::class, 'excluir'])->add($checkUserMiddleware);
+        $app->get('/clientes/{id}', [ClientesController::class, 'mostrar'])->add($checkUserMiddleware);
+        $app->put('/clientes/{id}', [ClientesController::class, 'atualizar'])->add($checkUserMiddleware);
 
         // TODO queridos alunos, fazer a questão abaixo sobre os pedidos
-        $app->get('/pedidos', [PedidosController::class, 'index']);
-        $app->get('/pedidos/novo', [PedidosController::class, 'novo']);
-        $app->get('/pedidos/{id}/excluir', [PedidosController::class, 'excluir']);
-        $app->post('/pedidos', [PedidosController::class, 'criar']);
-        $app->get('/pedidos/{id}/editar', [PedidosController::class, 'editar']);
-        $app->post('/pedidos/{id}', [PedidosController::class, 'atualizar']);
+        $app->get('/pedidos', [PedidosController::class, 'index'])->add($checkUserMiddleware);
+        $app->get('/pedidos/novo', [PedidosController::class, 'novo'])->add($checkUserMiddleware);
+        $app->get('/pedidos/{id}/excluir', [PedidosController::class, 'excluir'])->add($checkUserMiddleware);
+        $app->post('/pedidos', [PedidosController::class, 'criar'])->add($checkUserMiddleware);
+        $app->get('/pedidos/{id}/editar', [PedidosController::class, 'editar'])->add($checkUserMiddleware);
+        $app->post('/pedidos/{id}', [PedidosController::class, 'atualizar'])->add($checkUserMiddleware);
 
-
-
+        // pagina não encontrada
         $errorMiddleware = $app->addErrorMiddleware(true, true, true);
         $errorMiddleware->setErrorHandler(
             HttpNotFoundException::class,

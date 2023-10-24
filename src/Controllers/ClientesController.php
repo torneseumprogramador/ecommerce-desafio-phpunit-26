@@ -20,6 +20,8 @@ class ClientesController{
     }
 
     public static function index(Request $request, Response $response) {
+        $response = $response->withHeader('Content-Type', 'application/json');
+        
         $querystringParams = $request->getQueryParams();
         $pagina = $querystringParams["pagina"] ?? 1;
         $totalPagina = $querystringParams["totalPagina"] ?? 5;
@@ -34,7 +36,6 @@ class ClientesController{
             $params["id"] = $querystringParams["id"];
 
         $clientes = self::service()->buscar($params, $pagina, $totalPagina);
-        $response = $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($clientes));
         return $response->withStatus(200);
     }
@@ -129,6 +130,8 @@ class ClientesController{
     }
 
     public static function excluir(Request $request, Response $response) {
+        $response = $response->withHeader('Content-Type', 'application/json');
+        
         $id = $request->getAttribute('id');
 
         $cliente = self::service()->buscarPorId($id);
