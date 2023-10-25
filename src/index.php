@@ -12,17 +12,6 @@ use Slim\Routing\RouteContext;
 $app = AppFactory::create();
 $app->addBodyParsingMiddleware();
 
-// Cross Domain
-$app->add(function ($request, $handler) {
-    $response = $handler->handle($request);
-    
-    return $response
-           ->withHeader('Access-Control-Allow-Origin', '*') // Pode ser restrito a domínios específicos, se necessário
-           ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-           ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-});
-
-
 // Token jwt
 $app->add(new \Tuupola\Middleware\JwtAuthentication([
     "secure" => true, // Protege todas as rotas
@@ -105,5 +94,15 @@ $checkUserMiddleware = function ($request, $handler) {
 };
 
 Routes::render($app, $checkUserMiddleware);
+
+// Cross Domain
+$app->add(function ($request, $handler) {
+    $response = $handler->handle($request);
+    
+    return $response
+           ->withHeader('Access-Control-Allow-Origin', '*') // Pode ser restrito a domínios específicos, se necessário
+           ->withHeader('Access-Control-Allow-Headers', '*')
+           ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+});
 
 $app->run();

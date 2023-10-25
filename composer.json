@@ -19,11 +19,11 @@
         }
     ],
     "scripts": {
-        "start": "php -S localhost:8080 src/index.php",
+        "start": "php -S localhost:8081 src/index.php",
         "test": "phpunit"
     },
     "config": {
-        "process-timeout": 1200
+        "process-timeout": 2400
     },
     "require": {
         "slim/slim": "^4.0",
