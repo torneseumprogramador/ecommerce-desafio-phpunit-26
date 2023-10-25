@@ -33,7 +33,11 @@ class LoginController{
             "emailLogado" => "adm@teste.com",
             "permissao" => [
                 [ "controller" => "Clientes", "action" => "index" ],
-                [ "controller" => "Clientes", "action" => "cadastrar" ]
+                [ "controller" => "Clientes", "action" => "cadastrar" ],
+                [ "controller" => "Clientes", "action" => "mostrar" ],
+                [ "controller" => "Clientes", "action" => "criar" ],
+                [ "controller" => "Clientes", "action" => "atualizar" ],
+                [ "controller" => "Clientes", "action" => "excluir" ]
             ]
         );
         
