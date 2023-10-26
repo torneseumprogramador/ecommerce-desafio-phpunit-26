@@ -16,12 +16,17 @@ class LoginController{
 
         // TODO find na repo de adminsitrador
 
-        if( $data['email'] != "adm@teste.com" ){
+        if(! $data){
+            $response->getBody()->write(json_encode([ "mensagem" => "Email ou senha inválido" ]));
+            return $response->withStatus(400);
+        }
+
+        if( !isset($data['email']) || $data['email'] != "adm@teste.com" ){
             $response->getBody()->write(json_encode([ "mensagem" => "Email inválido" ]));
             return $response->withStatus(400);
         }
 
-        if( $data['senha'] != "123456") {
+        if( !isset($data['senha']) || $data['senha'] != "123456") {
             $response->getBody()->write(json_encode([ "mensagem" => "Senha inválida" ]));
             return $response->withStatus(400);
         }
