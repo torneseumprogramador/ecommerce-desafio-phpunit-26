@@ -5,23 +5,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Danilo\EcommerceDesafio\Models\Cliente;
 use Danilo\EcommerceDesafio\Views\RenderView;
-
-/**
-* @OA\Info(title="API Desafio", version="0.1", description="API para E-commerce Desafio")
-*/
-
-/**
-* @OA\SecurityScheme(
-*     type="http",
-*     description="Use a JWT Bearer token para autenticar",
-*     name="Bearer",
-*     in="header",
-*     scheme="bearer",
-*     bearerFormat="JWT",
-*     securityScheme="bearer_token"
-* )
-*/
-
+use OpenApi\Annotations as OA;
 
 /**
  * @OA\Tag(name="Home")
