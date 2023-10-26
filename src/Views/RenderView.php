@@ -8,7 +8,8 @@ class RenderView {
         if(isset($view)) $action = $view;
         $renderer = new PhpRenderer(__DIR__);
         $conteudo = $renderer->fetch("/$controller/$action.html.php", $data);
-        return $renderer->render($response, "/Layouts/Layout.html.php", ['conteudo' => $conteudo]);
+        $logado = isset($_COOKIE['logado']) && $_COOKIE['logado'] === 'true';
+        return $renderer->render($response, "/Layouts/Layout.html.php", ['conteudo' => $conteudo, 'logado' => $logado]);
     }
 
     public static function render404($response) {

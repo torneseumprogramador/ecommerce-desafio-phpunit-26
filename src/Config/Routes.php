@@ -6,29 +6,38 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 use Danilo\EcommerceDesafio\Controllers\ClientesController;
 use Danilo\EcommerceDesafio\Controllers\PedidosController;
+use Danilo\EcommerceDesafio\Controllers\LoginController;
 use Danilo\EcommerceDesafio\Controllers\HomeController;
 use Danilo\EcommerceDesafio\Views\RenderView;
+use Danilo\EcommerceDesafio\Middleware\AuthenticationMiddleware;
 
 class Routes{
     public static function render($app){
+        $authenticationMiddleware = new AuthenticationMiddleware();
+
         $app->get('/', [HomeController::class, 'index']);
 
-        $app->get('/clientes', [ClientesController::class, 'index']);
-        $app->get('/clientes.json', [ClientesController::class, 'indexJson']);
-        $app->get('/clientes/novo', [ClientesController::class, 'novo']);
-        $app->get('/clientes/{id}/excluir', [ClientesController::class, 'excluir']);
-        $app->post('/clientes', [ClientesController::class, 'criar']);
-        $app->get('/clientes/{id}/editar', [ClientesController::class, 'editar']);
-        $app->post('/clientes/{id}', [ClientesController::class, 'atualizar']);
+        $app->get('/login', [LoginController::class, 'loginForm']);
+        $app->post('/login', [LoginController::class, 'login']);
+        $app->get('/sair', [LoginController::class, 'sair']);
 
-        $app->get('/pedidos', [PedidosController::class, 'index']);
-        $app->get('/pedidos/novo', [PedidosController::class, 'novo']);
-        $app->get('/pedidos/{id}/excluir', [PedidosController::class, 'excluir']);
-        $app->post('/pedidos', [PedidosController::class, 'criar']);
-        $app->get('/pedidos/{id}/editar', [PedidosController::class, 'editar']);
-        $app->post('/pedidos/{id}', [PedidosController::class, 'atualizar']);
+        $app->group('', function($group) {
+            $group->get('/clientes', [ClientesController::class, 'index']);
+            $group->get('/clientes.json', [ClientesController::class, 'indexJson']);
+            $group->get('/clientes/novo', [ClientesController::class, 'novo']);
+            $group->get('/clientes/{id}/excluir', [ClientesController::class, 'excluir']);
+            $group->post('/clientes', [ClientesController::class, 'criar']);
+            $group->get('/clientes/{id}/editar', [ClientesController::class, 'editar']);
+            $group->post('/clientes/{id}', [ClientesController::class, 'atualizar']);
 
+            $group->get('/pedidos', [PedidosController::class, 'index']);
+            $group->get('/pedidos/novo', [PedidosController::class, 'novo']);
+            $group->get('/pedidos/{id}/excluir', [PedidosController::class, 'excluir']);
+            $group->post('/pedidos', [PedidosController::class, 'criar']);
+            $group->get('/pedidos/{id}/editar', [PedidosController::class, 'editar']);
+            $group->post('/pedidos/{id}', [PedidosController::class, 'atualizar']);
 
+        })->add($authenticationMiddleware);
 
         // meus arquivos de assets oficiais
         $app->get('/assets/{path:.*}', function ($request, $response, $args) {

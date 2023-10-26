@@ -27,8 +27,16 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
                             <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/pedidos">Pedidos</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/clientes">Clientes</a></li>
+                            
+                            <?php if (!$logado): ?>
+                                <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                            <?php endif; ?>
+                            <?php if ($logado): ?>
+                                <li class="nav-item"><a class="nav-link" href="/pedidos">Pedidos</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/clientes">Clientes</a></li>
+                                <li class="nav-item"><a class="nav-link" onclick="return confirm('Confirma?')" href="/sair">Sair</a></li>
+                            <?php endif; ?>
+
                         </ul>
                     </div>
                 </div>
