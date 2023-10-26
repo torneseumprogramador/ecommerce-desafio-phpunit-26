@@ -35,6 +35,7 @@
         "firebase/php-jwt": "^5.5"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.4"
+        "phpunit/phpunit": "^10.4",
+        "zircote/swagger-php": "^4.7"
     }
 }

@@ -9,6 +9,36 @@ use Firebase\JWT\JWT;
 use Danilo\EcommerceDesafio\Config\TokenJwt;
 
 class LoginController{
+    /**
+     * @OA\Post(
+     *     path="/login",
+     *     tags={"Autenticação"},
+     *     summary="Realiza login e retorna um JWT Token",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Dados de login",
+     *         @OA\JsonContent(
+     *             required={"email", "senha"},
+     *             @OA\Property(property="email", type="string", description="E-mail do usuário"),
+     *             @OA\Property(property="senha", type="string", description="Senha do usuário"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Login bem-sucedido",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="token", type="string", description="JWT Token para autenticação")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Falha no login",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="mensagem", type="string", description="Mensagem de erro")
+     *         )
+     *     ),
+     * )
+     */
     public static function acao(Request $request, Response $response) {
         $response = $response->withHeader('Content-Type', 'application/json');
 

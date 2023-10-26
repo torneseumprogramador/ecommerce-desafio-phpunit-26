@@ -13,7 +13,6 @@ use Danilo\EcommerceDesafio\Views\RenderView;
 class Routes{
     public static function render($app, $checkUserMiddleware){
         $app->get('/', [HomeController::class, 'index'])->add($checkUserMiddleware);
-
         $app->post('/login', [LoginController::class, 'acao'])->add($checkUserMiddleware);
 
         $app->get('/clientes', [ClientesController::class, 'index'])->add($checkUserMiddleware);
@@ -29,6 +28,26 @@ class Routes{
         $app->post('/pedidos', [PedidosController::class, 'criar'])->add($checkUserMiddleware);
         $app->get('/pedidos/{id}/editar', [PedidosController::class, 'editar'])->add($checkUserMiddleware);
         $app->post('/pedidos/{id}', [PedidosController::class, 'atualizar'])->add($checkUserMiddleware);
+
+        $app->get('/swagger.json', function (\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response) {
+            // Caminho absoluto ou relativo ao arquivo openapi.json
+            $swaggerFilePath = __DIR__ . '/../Swagger/openapi.json'; 
+
+            if (!file_exists($swaggerFilePath)) {
+                return $response->withStatus(404)->write('Swagger file not found');
+            }
+        
+            // Ler o conteúdo do arquivo
+            $swaggerContent = file_get_contents($swaggerFilePath);
+        
+            // Adicionando cabeçalhos apropriados para a resposta JSON
+            $response = $response->withHeader('Content-Type', 'application/json');
+        
+            // Escrevendo o conteúdo do arquivo na resposta
+            $response->getBody()->write($swaggerContent);
+        
+            return $response;
+        });
 
         // pagina não encontrada
         $errorMiddleware = $app->addErrorMiddleware(true, true, true);

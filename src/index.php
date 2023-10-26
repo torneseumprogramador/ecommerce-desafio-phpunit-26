@@ -17,7 +17,8 @@ $app->add(new \Tuupola\Middleware\JwtAuthentication([
     "secure" => true, // Protege todas as rotas
     "ignore" => [
         "^/$", // Libera a rota da home
-        "^/login$" // Libera a rota de login
+        "^/login$", // Libera a rota de login
+        "^/swagger.*" // Libera a rota do swagger
     ],
     "attribute" => "decoded_token_data",
     "secret" => TokenJwt::get(),

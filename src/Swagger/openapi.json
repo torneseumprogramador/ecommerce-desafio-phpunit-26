@@ -1,0 +1,367 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/clientes": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Lista todos os clientes",
+                "operationId": "0bb798fe13f89bec29fb782f9b1e9d94",
+                "parameters": [
+                    {
+                        "name": "pagina",
+                        "in": "query",
+                        "description": "Número da página para paginação",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "totalPagina",
+                        "in": "query",
+                        "description": "Quantidade total de itens por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação bem-sucedida"
+                    },
+                    "400": {
+                        "description": "Erro na requisição"
+                    },
+                    "401": {
+                        "description": "Não autorizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Cria um novo cliente",
+                "operationId": "171c13a5ddd03800158a67041c10c129",
+                "requestBody": {
+                    "description": "Dados do cliente para criação",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "telefone",
+                                    "email",
+                                    "endereco"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "description": "Nome do cliente",
+                                        "type": "string"
+                                    },
+                                    "telefone": {
+                                        "description": "Telefone do cliente",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "E-mail do cliente",
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "endereco": {
+                                        "description": "Endereço do cliente",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cliente criado com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro na criação do cliente"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/clientes/{id}": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Mostra os detalhes de um cliente específico",
+                "operationId": "c7f283b2c5af71e2888d8dea47adfd54",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do cliente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operação bem-sucedida"
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Atualiza um cliente específico",
+                "operationId": "0ea694131885f36a35510a935d6a3b28",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do cliente a ser atualizado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados do cliente para atualização",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "telefone",
+                                    "email",
+                                    "endereco"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "description": "Nome do cliente",
+                                        "type": "string"
+                                    },
+                                    "telefone": {
+                                        "description": "Telefone do cliente",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "E-mail do cliente",
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "endereco": {
+                                        "description": "Endereço do cliente",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cliente atualizado com sucesso"
+                    },
+                    "400": {
+                        "description": "Erro na atualização"
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Exclui um cliente específico",
+                "operationId": "579f2dc6f13ca7c1be53a9350695e901",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do cliente a ser excluído",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Cliente excluído com sucesso"
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "/": {
+            "get": {
+                "summary": "Página inicial da API",
+                "description": "Retorna informações básicas sobre a API e os endpoints disponíveis.",
+                "operationId": "5a97f9e15362e2d440f93567eb479b20",
+                "responses": {
+                    "200": {
+                        "description": "Operação bem-sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "mensagem": {
+                                            "type": "string",
+                                            "example": "Bem vindo a API feita no Desafio de PHP"
+                                        },
+                                        "endpoints": {
+                                            "properties": {
+                                                "Login": {
+                                                    "type": "string",
+                                                    "example": "/login"
+                                                },
+                                                "Clientes": {
+                                                    "type": "string",
+                                                    "example": "/clientes"
+                                                },
+                                                "Pedidos": {
+                                                    "type": "string",
+                                                    "example": "/pedidos"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Realiza login e retorna um JWT Token",
+                "operationId": "74c3546afa636ee8eae31b77a584664b",
+                "requestBody": {
+                    "description": "Dados de login",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "senha"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "E-mail do usuário",
+                                        "type": "string"
+                                    },
+                                    "senha": {
+                                        "description": "Senha do usuário",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login bem-sucedido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "description": "JWT Token para autenticação",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Falha no login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "mensagem": {
+                                            "description": "Mensagem de erro",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearer_token": {
+                "type": "http",
+                "description": "Use a JWT Bearer token para autenticar",
+                "name": "Bearer",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Clientes"
+        }
+    ]
+}
