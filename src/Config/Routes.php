@@ -29,24 +29,26 @@ class Routes{
         $app->get('/pedidos/{id}/editar', [PedidosController::class, 'editar'])->add($checkUserMiddleware);
         $app->post('/pedidos/{id}', [PedidosController::class, 'atualizar'])->add($checkUserMiddleware);
 
-        $app->get('/swagger.json', function (\Psr\Http\Message\ServerRequestInterface $request, \Psr\Http\Message\ResponseInterface $response) {
-            // Caminho absoluto ou relativo ao arquivo openapi.json
-            $swaggerFilePath = __DIR__ . '/../Swagger/openapi.json'; 
+        $app->get('/swagger/{file:.*}', function ($request, $response, $args) {
+            $file = isset($args['file']) ? $args['file'] : 'index.html'; // Use 'index
 
-            if (!file_exists($swaggerFilePath)) {
-                return $response->withStatus(404)->write('Swagger file not found');
+            $file = __DIR__ . '/../Swagger/' . $file;
+        
+            if (!file_exists($file)) {
+                return $response->withStatus(404);
             }
-        
-            // Ler o conteúdo do arquivo
-            $swaggerContent = file_get_contents($swaggerFilePath);
-        
-            // Adicionando cabeçalhos apropriados para a resposta JSON
-            $response = $response->withHeader('Content-Type', 'application/json');
-        
-            // Escrevendo o conteúdo do arquivo na resposta
-            $response->getBody()->write($swaggerContent);
-        
-            return $response;
+
+            $extensionMimeTypes = [
+                'css' => 'text/css',
+                'js'  => 'application/javascript',
+            ];
+
+            $extension = pathinfo($file, PATHINFO_EXTENSION);
+            $mime = $extensionMimeTypes[$extension] ?? mime_content_type($file);
+
+            $stream = new \Slim\Psr7\Stream(fopen($file, 'r'));
+
+            return $response->withHeader('Content-Type', $mime)->withBody($stream);
         });
 
         // pagina não encontrada

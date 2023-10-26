@@ -1,3 +1,7 @@
+
+# gera a doc do swagger
+./vendor/bin/openapi --output src/Swagger/swagger.json src/Controllers/
+
 kill -9 $(lsof -t -i:8081)
 
 sh start.sh &
@@ -5,10 +9,8 @@ sh start.sh &
 echo "Aguardando start da api ..."
 sleep 3
 
-./vendor/bin/openapi --output src/Swagger/openapi.json src/Controllers/
-
 # mac
-open swagger/index.html
+open http://localhost:8081/swagger/index.html
 
 # explorer
-# explorer swagger/index.html
+# explorer http://localhost:8081/swagger/index.html

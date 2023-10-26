@@ -7,22 +7,25 @@ use Danilo\EcommerceDesafio\Models\Cliente;
 use Danilo\EcommerceDesafio\Views\RenderView;
 
 /**
- * @OA\Info(title="API Desafio", version="0.1", description="API para E-commerce Desafio")
- */
+* @OA\Info(title="API Desafio", version="0.1", description="API para E-commerce Desafio")
+*/
+
+/**
+* @OA\SecurityScheme(
+*     type="http",
+*     description="Use a JWT Bearer token para autenticar",
+*     name="Bearer",
+*     in="header",
+*     scheme="bearer",
+*     bearerFormat="JWT",
+*     securityScheme="bearer_token"
+* )
+*/
 
 
 /**
- * @OA\SecurityScheme(
- *     type="http",
- *     description="Use a JWT Bearer token para autenticar",
- *     name="Bearer",
- *     in="header",
- *     scheme="bearer",
- *     bearerFormat="JWT",
- *     securityScheme="bearer_token"
- * )
+ * @OA\Tag(name="Home")
  */
-
 
 class HomeController{
      /**
@@ -55,6 +58,7 @@ class HomeController{
                 "Login" => "/login",
                 "Clientes" => "/clientes",
                 "Pedidos" => "/pedidos",
+                "Swagger" => "/swagger/index.html",
             ]
         ]));
         $response->withStatus(200);

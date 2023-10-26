@@ -1,0 +1,52 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/": {
+            "get": {
+                "summary": "Página inicial da API",
+                "description": "Retorna informações básicas sobre a API e os endpoints disponíveis.",
+                "operationId": "5a97f9e15362e2d440f93567eb479b20",
+                "responses": {
+                    "200": {
+                        "description": "Operação bem-sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "mensagem": {
+                                            "type": "string",
+                                            "example": "Bem vindo a API feita no Desafio de PHP"
+                                        },
+                                        "endpoints": {
+                                            "properties": {
+                                                "Login": {
+                                                    "type": "string",
+                                                    "example": "/login"
+                                                },
+                                                "Clientes": {
+                                                    "type": "string",
+                                                    "example": "/clientes"
+                                                },
+                                                "Pedidos": {
+                                                    "type": "string",
+                                                    "example": "/pedidos"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Home"
+        }
+    ]
+}
