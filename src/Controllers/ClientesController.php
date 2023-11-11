@@ -65,7 +65,7 @@ class ClientesController{
             $params["id"] = $querystringParams["id"];
 
         $clientes = self::service()->buscar($params, $pagina, $totalPagina);
-        $response->getBody()->write(json_encode($clientes));
+        $response->getBody()->write(json_encode($clientes->data));
         return $response->withStatus(200);
     }
 
