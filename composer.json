@@ -20,12 +20,12 @@
         }
     ],
     "scripts": {
-        "start": "php -S localhost:8080 src/index.php",
+        "start": [
+            "Composer\\Config::disableProcessTimeout",
+            "php -S localhost:8080 -t src"
+        ],
         "test": "phpunit",
         "test-comportamento": "vendor/bin/behat"
-    },
-    "config": {
-        "process-timeout": 1200
     },
     "require": {
         "slim/slim": "^4.0",
