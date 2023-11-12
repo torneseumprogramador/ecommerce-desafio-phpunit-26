@@ -8,5 +8,5 @@ else
     echo "Iniciando a aplicação..."
     # Navega até a pasta do script e o executa
     cd /var/www/html/ecommerce-desafio-phpunit-26
-    sh start.sh
+    nohup sh start.sh &
 fi
