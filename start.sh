@@ -1,1 +1,1 @@
-composer run start
+yes | composer run start 
